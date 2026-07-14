@@ -199,11 +199,17 @@ async def lifespan(app_instance):
 
 app = FastAPI(title="AI Cargo Monitor", version="1.0.0", lifespan=lifespan)
 
+# Extra origins via env (comma-separated), e.g. custom Vercel domain:
+#   CORS_ORIGINS=https://aicargo.vercel.app,https://www.yourdomain.com
+_extra_origins = [
+    o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
+        *_extra_origins,
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,

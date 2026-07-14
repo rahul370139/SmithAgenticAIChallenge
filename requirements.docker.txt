@@ -1,0 +1,30 @@
+# Production Linux deps for Hostinger Docker image.
+# Differs from requirements.txt: includes CPU torch + sentence-transformers
+# (those were excluded on linux in the local/Railway file).
+
+pandas>=2.2
+numpy>=1.26,<2
+scikit-learn>=1.5
+xgboost>=2.1
+shap>=0.46
+optuna>=4.1
+joblib>=1.4
+langgraph>=0.4
+langchain-core>=0.3
+langchain-groq>=1.0
+langchain-openai>=0.3
+langchain-anthropic>=0.3
+fastapi>=0.115
+uvicorn[standard]>=0.34
+httpx>=0.28
+supabase>=2.9.0
+pypdf>=4.0.1
+python-dotenv>=1.0.0
+groq>=0.30.0,<1.0.0
+aiosmtplib>=2.0
+pydantic[email]>=2.0
+
+# Compliance RAG embeddings (CPU-only torch — keep image smaller than full CUDA)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+sentence-transformers==2.3.1

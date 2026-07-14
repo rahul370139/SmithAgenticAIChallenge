@@ -1,0 +1,36 @@
+# Hostinger VPS: run from project root
+#   docker compose up -d --build
+#
+# Frontend stays on Vercel. Point nginx (or Hostinger reverse proxy)
+# at this container on port 8000 / your published host port.
+
+services:
+  api:
+    build: .
+    container_name: ai-cargo-api
+    restart: unless-stopped
+    # Pathwise-style: publish directly on VPS public IP (no nginx/domain required)
+    # If Pathwise already uses 8000, change left side to 8001 → "8001:8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.production
+    environment:
+      - PORT=8000
+      - CARGO_LLM_PRIORITY=${CARGO_LLM_PRIORITY:-groq,openai,anthropic}
+      - STREAM_AUTO_ORCHESTRATE=${STREAM_AUTO_ORCHESTRATE:-true}
+      - NOTIFICATION_MODE=${NOTIFICATION_MODE:-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
+    volumes:
+      - cargo_logs:/app/notification_logs
+      - cargo_audit:/app/audit_logs
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/windows?limit=1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+
+volumes:
+  cargo_logs:
+  cargo_audit:
