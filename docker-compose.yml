@@ -9,10 +9,9 @@ services:
     build: .
     container_name: ai-cargo-api
     restart: unless-stopped
-    # Pathwise-style: publish directly on VPS public IP (no nginx/domain required)
-    # If Pathwise already uses 8000, change left side to 8001 → "8001:8000"
+    # Pathwise already uses host :8000 — AI Cargo uses :8001
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file:
       - .env.production
     environment:
