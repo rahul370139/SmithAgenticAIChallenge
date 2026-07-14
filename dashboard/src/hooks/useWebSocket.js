@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 const _apiUrl = import.meta.env.VITE_API_URL ?? '';
+// Same-origin proxy mode (Pathwise pattern): empty VITE_API_URL → wss/ws via Vercel domain
 const _wsBase = _apiUrl
   ? _apiUrl.replace(/^https/, 'wss').replace(/^http/, 'ws')
-  : `ws://${window.location.host}`;
+  : `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`;
 const WS_URL = `${_wsBase}/ws/events`;
 
 export function useWebSocket(eventTypes = []) {
